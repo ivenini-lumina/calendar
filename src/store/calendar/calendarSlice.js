@@ -1,7 +1,7 @@
 
 import { createSlice } from '@reduxjs/toolkit';
-import { addHours } from 'date-fns';
-
+// import { addHours } from 'date-fns';
+/*
 const tempEvent = {
     _id: new Date().getTime(),
     title: 'Cumple del Jefe',
@@ -14,11 +14,15 @@ const tempEvent = {
       name: 'Fernando'
     }
   };
+*/
 
 export const calendarSlice = createSlice({
     name: 'calendar',
     initialState: {
-        events: [ tempEvent ],
+        isLoadingEvents: true,
+        events: [ 
+          //tempEvent 
+        ],
         activeEvent: null,
     },
     reducers: {
@@ -31,7 +35,7 @@ export const calendarSlice = createSlice({
         },
         onUpdateEvent: (state, { payload } ) => {
           state.events = state.events.map( (ev) => {
-            if (ev._id === payload._id){
+            if (ev.id === payload.id){
               return payload;
             }
             return ev;
@@ -40,12 +44,36 @@ export const calendarSlice = createSlice({
         },
         onDeleteEvent: (state ) => {
           if ( state.activeEvent ){
-            state.events = state.events.filter( ev => ev._id !== state.activeEvent._id );
+            state.events = state.events.filter( ev => ev.id !== state.activeEvent.id );
             state.activeEvent = null;
           }
+        },
+        onLoadEvents: (state, { payload = [] } ) => {
+          //state.events = payload;
+          payload.forEach( event => {
+            const exists = state.events.some( dbEvent => dbEvent.id === event.id );
+
+            if (!exists){
+              state.events.push(event);              
+            }
+          } );          
+
+          state.isLoadingEvents = false;
+        },
+        onLogoutCalendar: (state ) => {
+          state.isLoadingEvents = true;
+          state.events = [];
+          state.activeEvent = null;
         },
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent } = calendarSlice.actions;
+export const {
+    onSetActiveEvent, 
+    onAddNewEvent, 
+    onUpdateEvent, 
+    onDeleteEvent, 
+    onLoadEvents,
+    onLogoutCalendar,
+} = calendarSlice.actions;
