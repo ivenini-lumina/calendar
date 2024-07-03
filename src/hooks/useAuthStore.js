@@ -22,7 +22,7 @@ export const useAuthStore = () => {
             //console.log(error);
             setTimeout(() => {
                 dispatch( clearErrorMessage() );
-            }, 1000);
+            }, 10);
         }
     };
 
@@ -44,7 +44,7 @@ export const useAuthStore = () => {
             } else {
                 dispatch( onLogout('Datos de registro incorrecto: ' + msg) );
             }
-            console.log(error);
+            //console.log(error);
             setTimeout(() => {
                 dispatch( clearErrorMessage() );
             }, 1000);
